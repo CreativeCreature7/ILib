@@ -1,6 +1,6 @@
-import json
+import datetime
 from sqlalchemy import INTEGER, create_engine
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey  
+from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, DateTime  
 
 # Global Variables
 SQLITE                  = 'sqlite'
@@ -58,8 +58,8 @@ class MyDatabase:
         loans = Table(LOANS, metadata,
                         Column('cust_id', Integer, ForeignKey('Customers.id')),
                         Column('book_id', Integer, ForeignKey('Books.id')),
-                        Column('loan_date', String),
-                        Column('return_date', String)
+                        Column('loan_date', DateTime),
+                        Column('return_date', DateTime)
                         )
 
         try:
@@ -74,7 +74,7 @@ class MyDatabase:
     def execute_query(self, query=''):
         if query == '' : return
 
-        print (query)
+        print(query)
         with self.db_engine.connect() as connection:
             try:
                 connection.execute(query)
@@ -121,8 +121,61 @@ class MyDatabase:
                 f"VALUES ('{name}', '{city}', {age});"
         self.execute_query(query=query)
 
-  #  def add_loan(self, cust_id, book_id, loan_date, return_date):
-        # Insert Data
-       # query = f"INSERT INTO {BOOKS}( name, author, year_published, type) " \
-        #        f"VALUES ( '{name}', '{author}', {year_published}, {book_type});"
-        # self.get_data_db(query=query)
+    def loan_book(self, cust_id, book_id, loan_date, return_date):
+        #TODO: check if book is loaned
+        query = f"INSERT INTO {BOOKS}( name, author, year_published, type) " \
+                f"VALUES ({cust_id}, {book_id}, '{loan_date}', '{return_date}');"
+        self.get_data_db(query=query)
+
+    # when book_id is not on database it is available for loan
+    def return_book(self, book_id):
+        query = f"SELECT * FROM {LOANS} where book_id={book_id}"
+        res = self.get_data_db(query=query)
+        if res:
+            query = f"DELETE FROM {LOANS} WHERE book_id={book_id}"
+            self.execute_query(query=query)
+        else:
+            print('Book not loaned')
+    def display_all_books(self):
+        return self.get_data_db(table=BOOKS)
+
+    def display_all_customers(self):
+        return self.get_data_db(table=CUSTOMERS)
+
+    def display_all_loans(self):
+        return self.get_data_db(table=LOANS)
+
+    def display_all_late_loans(self):
+        late_loans = []
+        res = self.get_data_db(table={LOANS})
+        for loan in res:
+            if datetime.datetime.now() < loan[3]:
+                late_loans.append(loan)
+        return late_loans
+
+    def find_book_by_name(self, name):
+        query = f"SELECT * FROM {BOOKS} WHERE name= '{name}'"
+        res = self.get_data_db(query=query)
+        if res:
+            return res
+        return 'Book Not Found'
+
+    def find_customer_by_name(self, name):
+        query = f"SELECT * FROM {CUSTOMERS} WHERE name= '{name}'"
+        res = self.get_data_db(query=query)
+        if res:
+            return res
+        return 'Customer Not Found'
+
+    def delete_book_by_id(self, id):
+        # Delete Book by Id
+        query = f"DELETE FROM {BOOKS} WHERE id={id}"
+        self.execute_query(query=query)
+        return f"deleted {id} successfully"
+    
+    def remove_customer(self, id):
+        # Delete Customer by Id
+        query = f"DELETE FROM {CUSTOMERS} WHERE id={id}"
+        self.execute_query(query=query)
+        return f"deleted {id} successfully" 
+        

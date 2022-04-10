@@ -7,7 +7,9 @@
 # ----------------------------------
 # Working with Database : SQLite
 # ----------------------------------
-import json
+from my_modules.book import Book
+from my_modules.customer import Customer
+from my_modules.loan import Loan
 from flask import Flask, render_template
 from my_modules import init_db
 
