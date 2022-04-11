@@ -122,10 +122,14 @@ class MyDatabase:
         self.execute_query(query=query)
 
     def loan_book(self, cust_id, book_id, loan_date, return_date):
-        #TODO: check if book is loaned
-        query = f"INSERT INTO {BOOKS}( name, author, year_published, type) " \
+        query = f"SELECT * FROM {LOANS} WHERE book_id={book_id}"
+        res = self.get_data_db(query=query)
+        if res:
+            return "Book is already loaned"
+        query = f"INSERT INTO {LOANS}(cust_id, book_id, loan_date, return_date) " \
                 f"VALUES ({cust_id}, {book_id}, '{loan_date}', '{return_date}');"
-        self.get_data_db(query=query)
+        self.execute_query(query=query)
+        return res
 
     # when book_id is not on database it is available for loan
     def return_book(self, book_id):
