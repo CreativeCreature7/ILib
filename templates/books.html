@@ -1,12 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    {{books}}
-</body>
-</html>
+{% extends "layout.html" %}
+{% block title %}Books{% endblock %}
+{% block content %}
+{%if message == 'Book loaned successfully'%}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% elif message == 'Book is already loaned' %}
+<div class="alert alert-danger">
+    {{ message }}
+</div>
+{% endif %}
+<div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+          {% for book in books %}  
+          <div class="col">
+              <div class="card shadow-sm">
+                  <img src="https://picsum.photos/id/{{book[0]}}/600/600" alt="">
+                  <div class="card-body">
+                      <p class="card-text">book name: {{book[1]}}, author: {{book[2]}}, year published:{{book[3]}}</p>
+                      <div class="d-flex justify-content-between align-items-center">
+                          <div class="btn-group">
+                            <form action="" method=POST>
+                                <button class="btn btn-sm btn-outline-secondary" type="submit" value="{{ book[0] }}" name="loan_book">loan</button>
+                            </form>
+                              <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                            </div>
+                            <form action="" method=POST>
+                                <button class="btn btn-sm btn-danger" type="submit" value="{{ book[0] }}" name="delete_book">delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endblock %}
+    

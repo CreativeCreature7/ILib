@@ -11,9 +11,9 @@ SQLITE                  = 'sqlite'
 # MICROSOFT_SQL_SERVER    = 'mssqlserver'
 
 # Table Names
-BOOKS           = 'Books'
-CUSTOMERS       = 'Customers'
-LOANS    ="loans"
+BOOKS = 'Books'
+CUSTOMERS = 'Customers'
+LOANS = "loans"
 
 
 class MyDatabase:
@@ -77,7 +77,6 @@ class MyDatabase:
     def execute_query(self, query=''):
         if query == '' : return
 
-        print(query)
         with self.db_engine.connect() as connection:
             try:
                 connection.execute(query)
@@ -87,7 +86,6 @@ class MyDatabase:
     # Select
     def get_data_db(self, table='', query=''):
         query = query if query != '' else f"SELECT * FROM '{table}';"
-        print(query)
         res = []
         with self.db_engine.connect() as connection:
             try:
@@ -124,15 +122,23 @@ class MyDatabase:
                 f"VALUES ('{name}', '{city}', {age});"
         self.execute_query(query=query)
 
-    def loan_book(self, cust_id, book_id, loan_date, return_date):
+    def loan_book(self, cust_id, book_id):
         query = f"SELECT * FROM {LOANS} WHERE book_id={book_id}"
         res = self.get_data_db(query=query)
         if res:
             return "Book is already loaned"
+        query = f"SELECT type FROM {BOOKS} WHERE id={book_id}"
+        book_type = self.get_data_db(query=query)
+        if book_type == 1:
+            return_date = datetime.date(datetime.now()) + timedelta(days=10)
+        elif book_type == 2:
+            return_date = datetime.date(datetime.now()) + timedelta(days=5)
+        else:
+            return_date = datetime.date(datetime.now()) + timedelta(days=2)
         query = f"INSERT INTO {LOANS}(cust_id, book_id, loan_date, return_date) " \
-                f"VALUES ({cust_id}, {book_id}, '{loan_date}', '{return_date}');"
+                f"VALUES ({cust_id}, {book_id}, '{datetime.date(datetime.now())}', '{return_date}');"
         self.execute_query(query=query)
-        return res
+        return "Book loaned successfully"
 
     # when book_id is not on database it is available for loan
     def return_book(self, book_id):
@@ -212,6 +218,6 @@ class MyDatabase:
                 self.add_customer(name, city, age)
                 self.add_book(book_name, book_author, book_year, book_type)
                 if i%5 == 0:
-                    self.loan_book(randint(1, 100), randint(1, 100), loan_date, return_date)  
+                    self.loan_book(randint(1, 100), randint(1, 100), datetime.date(loan_date), datetime.date(return_date))  
             except Exception as e:
                 print(e)
