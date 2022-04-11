@@ -1,6 +1,8 @@
 import datetime
-from sqlalchemy import INTEGER, create_engine
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, DateTime  
+from faker import Faker
+from random import randint
+from datetime import datetime, timedelta
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, DateTime  
 
 # Global Variables
 SQLITE                  = 'sqlite'
@@ -39,6 +41,7 @@ class MyDatabase:
             print("DBType is not found in DB_ENGINE")
 
     def create_db_tables(self):
+        # Create Tables
         metadata = MetaData()
         books = Table(BOOKS, metadata,
                       Column('id', Integer, primary_key=True),
@@ -181,5 +184,34 @@ class MyDatabase:
         # Delete Customer by Id
         query = f"DELETE FROM {CUSTOMERS} WHERE id={id}"
         self.execute_query(query=query)
-        return f"deleted {id} successfully" 
-        
+        return f"deleted {id} successfully"
+
+    # genreate 100 fake users and books
+    def generate_fake_data(self):
+        fake = Faker()
+        for i in range(100):
+            # generate fake user
+            name = fake.name()
+            city = fake.city()
+            age = randint(18, 60)
+            # generate fake book
+            book_name = fake.text(max_nb_chars=20)
+            book_author = fake.name()
+            book_year = randint(2000, 2020)
+            book_type = randint(1, 3)
+            # generate fake loan
+            loan_date = datetime.now()
+            if book_type == 1:
+                return_date = loan_date + timedelta(days=10)
+            elif book_type == 2:
+                return_date = loan_date + timedelta(days=5)
+            else:
+                return_date = loan_date + timedelta(days=2)    
+            # insert fake data
+            try:
+                self.add_customer(name, city, age)
+                self.add_book(book_name, book_author, book_year, book_type)
+                if i%5 == 0:
+                    self.loan_book(randint(1, 100), randint(1, 100), loan_date, return_date)  
+            except Exception as e:
+                print(e)

@@ -10,48 +10,43 @@
 from my_modules.book import Book
 from my_modules.customer import Customer
 from my_modules.loan import Loan
-from flask import Flask, render_template
+from flask import Flask, redirect, render_template, url_for
 from my_modules import init_db
 
-api = Flask(__name__)
+
+app = Flask(__name__)
 dbms = init_db.MyDatabase(init_db.SQLITE, db_name='mydb.sqlite')
 dbms.create_db_tables()
-dbms.add_book('How to kill a dragon', 'Guy Ben Hemo', 2021, 2)
-dbms.add_book('How to kill a dragon - 2', 'Guy Ben Hemo', 2022, 3)
-
-@api.route('/')
-def home():
-    return render_template("index.html")
-
-@api.route('/books')
-def books():
-    res= dbms.get_data_db(table=init_db.BOOKS)
-    return render_template("books.html",books=res)
 
 
 
 
 # Program entry point
-def main():
-    api.run(debug=True)
+@app.route('/')
+def home():
+    return render_template("index.html")
 
-    # # Create Tables
-    # dbms.create_db_tables()
-    # # dbms.insert_single_data()
-    # # dbms.db_query(init_db.USERS)
-    # # dbms.db_query(init_db.ADDRESSES)
-    # dbms.insert_cars("green",2034)
-    # dbms.db_query(table= init_db.CARS)
+@app.route('/generate')
+def generate():
+    dbms.generate_fake_data()
+    return redirect('/')
 
-    # dbms.db_query(query= f"select color from '{init_db.CARS}'")
-    # dbms.delete_by_id(init_db.CARS,2 )
-    # res= dbms.db_query(table= init_db.CARS)
-    # print(res[1])
-    # # dbms.sample_query() # simple query
-    # # dbms.sample_delete() # delete data
-    # # dbms.sample_insert() # insert data
-    # # dbms.sample_update() # update data
+@app.route('/books')
+def books():
+    res = dbms.get_data_db(table=init_db.BOOKS)
+    return render_template("books.html", books=res)
+
+@app.route('/customers')
+def customers():
+    res = dbms.get_data_db(table=init_db.CUSTOMERS)
+    return render_template("customers.html", customers=res)
+
+@app.route('/loans')
+def loans():
+    res = dbms.get_data_db(table=init_db.LOANS)
+    return render_template("loans.html", loans=res)
 
 
 # run the program
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    app.run(debug=True)
