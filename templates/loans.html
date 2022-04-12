@@ -2,6 +2,7 @@
 {% block title %}loans{% endblock %}
 {% block content %}
   <h1>Loans</h1>
-  <p class="important">
-    {{loans}}
+    {% for loan in loans %}
+      <li>customer id: {{loan[0]}}, book id: {{loan[1]}}, loan start date: {{loan[2]}}, loan end date: {{loan[3]}} </li>
+    {% endfor %}
 {% endblock %}

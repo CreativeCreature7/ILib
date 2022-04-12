@@ -44,25 +44,25 @@ class MyDatabase:
         # Create Tables
         metadata = MetaData()
         books = Table(BOOKS, metadata,
-                      Column('id', Integer, primary_key=True),
-                      Column('name', String),
-                      Column('author', String),
-                      Column('year_published', Integer),
-                      Column('type', Integer)
+                      Column('id', Integer, nullable=False, primary_key=True),
+                      Column('name', String, nullable=False),
+                      Column('author', String, nullable=False),
+                      Column('year_published', Integer, nullable=False),
+                      Column('type', Integer, nullable=False)
                       )
 
         customers = Table(CUSTOMERS, metadata,
-                      Column('id', Integer, primary_key=True),
-                      Column('name', String),
-                      Column('city', String),
-                      Column('age', Integer)
+                      Column('id', Integer, primary_key=True, nullable=False),
+                      Column('name', String, nullable=False),
+                      Column('city', String, nullable=False),
+                      Column('age', Integer, nullable=False)
                       )
 
         loans = Table(LOANS, metadata,
-                        Column('cust_id', Integer, ForeignKey('Customers.id')),
-                        Column('book_id', Integer, ForeignKey('Books.id')),
-                        Column('loan_date', DateTime),
-                        Column('return_date', DateTime)
+                        Column('cust_id', Integer, ForeignKey('Customers.id'), nullable=False),
+                        Column('book_id', Integer, ForeignKey('Books.id'), nullable=False),
+                        Column('loan_date', DateTime, nullable=False),
+                        Column('return_date', DateTime, nullable=False)
                         )
 
         try:
@@ -107,28 +107,32 @@ class MyDatabase:
         
         query = f"DELETE FROM {table} WHERE id={id}"
         self.execute_query(table=table)
-        return f"deleted {id} successfully"
+        return "success delete"
 
 
     def add_book(self, name, author, year_published, book_type):
         # Insert Data
         query = f"INSERT INTO {BOOKS}(name, author, year_published, type) " \
                 f"VALUES ('{name}', '{author}', {year_published}, {book_type});"
-        self.execute_query(query=query)
+        res = self.execute_query(query=query)
+        return "success add"
+
 
     def add_customer(self, name, city, age):
         # Insert Data
         query = f"INSERT INTO {CUSTOMERS}(name, city, age) " \
                 f"VALUES ('{name}', '{city}', {age});"
         self.execute_query(query=query)
+        return "success add"
 
     def loan_book(self, cust_id, book_id):
         query = f"SELECT * FROM {LOANS} WHERE book_id={book_id}"
         res = self.get_data_db(query=query)
         if res:
-            return "Book is already loaned"
+            return "failed to loan"
         query = f"SELECT type FROM {BOOKS} WHERE id={book_id}"
         book_type = self.get_data_db(query=query)
+        book_type = book_type[0][0]
         if book_type == 1:
             return_date = datetime.date(datetime.now()) + timedelta(days=10)
         elif book_type == 2:
@@ -138,7 +142,7 @@ class MyDatabase:
         query = f"INSERT INTO {LOANS}(cust_id, book_id, loan_date, return_date) " \
                 f"VALUES ({cust_id}, {book_id}, '{datetime.date(datetime.now())}', '{return_date}');"
         self.execute_query(query=query)
-        return "Book loaned successfully"
+        return "success loan"
 
     # when book_id is not on database it is available for loan
     def return_book(self, book_id):
@@ -147,8 +151,9 @@ class MyDatabase:
         if res:
             query = f"DELETE FROM {LOANS} WHERE book_id={book_id}"
             self.execute_query(query=query)
-        else:
-            print('Book not loaned')
+            return "success returned"
+        return 'failed to return'
+
     def display_all_books(self):
         return self.get_data_db(table=BOOKS)
 
@@ -160,37 +165,36 @@ class MyDatabase:
 
     def display_all_late_loans(self):
         late_loans = []
-        res = self.get_data_db(table={LOANS})
+        res = self.get_data_db(table=LOANS)
         for loan in res:
-            if datetime.datetime.now() < loan[3]:
+            if datetime.date(datetime.now()) > datetime.date(datetime.strptime(loan[3], '%Y-%m-%d')):
                 late_loans.append(loan)
         return late_loans
 
     def find_book_by_name(self, name):
-        query = f"SELECT * FROM {BOOKS} WHERE name= '{name}'"
+        query = f"SELECT * FROM {BOOKS} WHERE name LIKE '{name}%'"
         res = self.get_data_db(query=query)
-        if res:
-            return res
-        return 'Book Not Found'
+        return res
+        
 
     def find_customer_by_name(self, name):
-        query = f"SELECT * FROM {CUSTOMERS} WHERE name= '{name}'"
+        query = f"SELECT * FROM {CUSTOMERS} WHERE name LIKE '{name}%'"
         res = self.get_data_db(query=query)
-        if res:
-            return res
-        return 'Customer Not Found'
+        return res
 
     def delete_book_by_id(self, id):
         # Delete Book by Id
         query = f"DELETE FROM {BOOKS} WHERE id={id}"
         self.execute_query(query=query)
-        return f"deleted {id} successfully"
-    
+        query = f'DELETE FROM {LOANS} WHERE book_id={id}'
+        self.execute_query(query=query)
+        return "success delete"
+
     def remove_customer(self, id):
         # Delete Customer by Id
         query = f"DELETE FROM {CUSTOMERS} WHERE id={id}"
         self.execute_query(query=query)
-        return f"deleted {id} successfully"
+        return "success removed"
 
     # genreate 100 fake users and books
     def generate_fake_data(self):
@@ -218,6 +222,6 @@ class MyDatabase:
                 self.add_customer(name, city, age)
                 self.add_book(book_name, book_author, book_year, book_type)
                 if i%5 == 0:
-                    self.loan_book(randint(1, 100), randint(1, 100), datetime.date(loan_date), datetime.date(return_date))  
+                    self.loan_book(randint(1, 100), randint(1, 100))  
             except Exception as e:
                 print(e)
