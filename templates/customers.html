@@ -1,7 +1,33 @@
 {% extends "layout.html" %}
 {% block title %}customers{% endblock %}
 {% block content %}
-  <h1>Customers</h1>
-  <p class="important">
-      {{customers}}
+<form method="POST">
+  <h1 class="h3 mb-3 fw-normal">Add Customer</h1>
+  <div class="form-floating">
+    <input type="text" class="form-control" id="name" name="name" placeholder="Eyal Gold">
+    <label for="name">Name</label>
+  </div>
+  <div class="form-floating">
+    <input type="text" class="form-control" id="city" name="city" placeholder="Tel-Aviv">
+    <label for="city">City</label>
+  </div>
+
+  <div class="form-floating">
+    <input type="number" class="form-control" id="age" name="age" placeholder="21">
+    <label for="age">Age</label>
+  </div>
+
+  </div>
+  <button class="w-100 btn btn-lg btn-primary" type="submit">Add Customer</button>
+</form>
+
+{% for customer in customers %}
+<div>
+    {{customer[1]}}
+    <form action="" method=POST>
+      <button class="btn btn-sm btn-danger" type="submit" value="{{ customer[0] }}" name="remove_customer">remove</button>
+    </form>
+</div>
+{% endfor %}
+
 {% endblock %}

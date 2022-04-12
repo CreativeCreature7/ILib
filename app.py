@@ -1,7 +1,6 @@
 # ----------------------------------
 # Working with Database : SQLite
 # ----------------------------------
-from email import message
 from flask import Flask, redirect, render_template, request, url_for
 from my_modules import my_data_base
 from random import randint
@@ -46,8 +45,14 @@ def books():
     res = dbms.get_data_db(table=my_data_base.BOOKS)
     return render_template("books.html", books=res, message=message)
 
-@app.route('/customers')
+@app.route('/customers', methods=['GET', 'POST'])
 def customers():
+    print(request.form)
+    if request.method == 'POST':
+        if 'name' in request.form and 'city' in request.form and 'age' in request.form:
+            dbms.add_customer(request.form['name'], request.form['city'], request.form['age'])
+        if 'remove_customer' in request.form:
+            dbms.remove_customer(request.form['remove_customer'])
     res = dbms.get_data_db(table=my_data_base.CUSTOMERS)
     return render_template("customers.html", customers=res)
 
