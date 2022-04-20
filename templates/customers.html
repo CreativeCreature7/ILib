@@ -1,11 +1,16 @@
 {% extends "layout.html" %}
 {% block title %}customers{% endblock %}
-{% block content %}
-{%if 'success' in message %}
-<div class="alert alert-success">
-    {{ message }}
+{% block search_nav %}
+<div class="col-lg-6">
+  <form method="POST">
+   <div class="input-group">
+     <input type="text" class="form-control" placeholder="Customer Name" id="customer_name" name="customer_name" >
+     <span class="input-group-btn">
+       <button class="btn btn-outline-success my-2 my-sm-0 mx-2" type="submit">Search Customer</button>
+     </span>
+   </form>
 </div>
-{% endif %}
+<!-- <div class="col-lg-6">
 <form method="POST">
   <h1 class="h3 mb-3 fw-normal">Search Customer</h1>
   <div class="form-floating">
@@ -14,8 +19,16 @@
   </div>
   <button class="w-100 btn btn-lg btn-primary" type="submit">Search Customer</button>
 </form>
+</div> -->
+{% endblock %}
+{% block content %}
+{%if 'success' in message %}
+<div class="alert alert-success">
+    {{ message }}
+</div>
+{% endif %}
 
-<form method="POST">
+<!-- <form method="POST">
   <h1 class="h3 mb-3 fw-normal">Add Customer</h1>
   <div class="form-floating">
     <input type="text" class="form-control" id="name" name="name" placeholder="Eyal Gold" required>
@@ -33,15 +46,58 @@
 
   </div>
   <button class="w-100 btn btn-lg btn-primary" type="submit">Add Customer</button>
-</form>
+</form> -->
 
 {% for customer in customers %}
 <div>
-    {{customer[1]}}
+    <span class="text-light">{{customer[1]}}</span>
     <form action="" method=POST>
       <button class="btn btn-sm btn-danger" type="submit" value="{{ customer[0] }}" name="remove_customer">remove</button>
     </form>
 </div>
 {% endfor %}
+
+<!-- get updates / modal trigger -->
+<div class="fixed-bottom">
+  <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#reg-modal">
+  Add New Customer
+  </button>
+</div>
+
+<!-- modal itself -->
+<div class="modal fade" id="reg-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-title">Add Customer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="name" name="name" placeholder="Eyal Gold" required>
+            <label for="name">Name</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="city" name="city" placeholder="Tel-Aviv" required>
+            <label for="city">City</label>
+          </div>
+        
+          <div class="form-floating">
+            <input type="number" class="form-control" id="age" name="age" placeholder="21" required>
+            <label for="age">Age</label>
+          </div>
+        
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary w-100">Add Customer</button>
+        </div>
+          
+              </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

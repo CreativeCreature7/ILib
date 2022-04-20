@@ -11,7 +11,7 @@ from datetime import timedelta
 app = Flask(__name__)
 print(type(app))
 app.secret_key = 'my_secret'
-app.permanent_session_lifetime = timedelta(minutes=40)
+app.permanent_session_lifetime = timedelta(minutes=30)
 
 
 
@@ -26,7 +26,12 @@ admin_password = 'admin'
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if 'user' in session:
-        return "already logeed in"
+        if app.current == 'booksloans':
+            app.current = 'home'
+            return redirect(url_for('books_loans'))
+        elif app.current == 'customers':
+            app.current = 'home'
+            return redirect(url_for('customers'))
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -46,6 +51,7 @@ def generate():
 
 @app.route('/booksloans', methods=['GET', 'POST'])
 def books_loans():
+    app.current = 'booksloans'
     if 'user' in session:
         message = ''
         # res = dbms.get_data_db(table=my_data_base.LOANS) - gets all loans
@@ -67,6 +73,7 @@ def books_loans():
 
 @app.route('/customers', methods=['GET', 'POST'])
 def customers():
+    app.current = 'customers'
     if 'user' in session:
         message = ''
         print(request.form)

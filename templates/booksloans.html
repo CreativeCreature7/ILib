@@ -21,41 +21,6 @@
     {{ message }}
 </div>
 {% endif %}
-<!-- <form method="POST">
-    <h1 class="h3 mb-3 fw-normal">Search Book</h1>
-    <div class="form-floating">
-        <input type="text" class="form-control" id="book_name" name="book_name" placeholder="Harry Potter" required>
-        <label for="book_name">Book Name</label>
-    </div>
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Search Book</button>
-</form> -->
-<form method="POST">
-    <h1 class="h3 mb-3 fw-normal">Add Book</h1>
-    <div class="form-floating">
-        <input type="text" class="form-control" id="name" name="name" placeholder="Harry Potter" required>
-        <label for="name">Name</label>
-    </div>
-    <div class="form-floating">
-        <input type="text" class="form-control" id="author" name="author" placeholder="J.K Rolling" required>
-        <label for="author">Author</label>
-    </div>
-
-    <div class="form-floating">
-        <input type="number" class="form-control" id="year_published" name="year_published" placeholder="21" required>
-        <label for="year_published">Year Published</label>
-    </div>
-
-    <div class="form-floating mb-3">
-        <select name="book_type" id="book_type">
-            <option value="+1">1 - two days loan</option>
-            <option value="+2">2 - five days loan</option>
-            <option value="+3">3 - ten days loan</option>
-        </select>
-    </div>
-
-    </div>
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Add Book</button>
-</form>
 <div class="album py-5 bg-dark">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -85,10 +50,12 @@
             {% endfor %}
         </div>
     </div>
-  <!-- get updates / modal trigger -->
-<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reg-modal">
-Register for Updates
-</button>
+<!-- get updates / modal trigger -->
+<div class="fixed-bottom">
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#reg-modal">
+    Add New Book
+    </button>
+</div>
 
   <!-- modal itself -->
   <div class="modal fade" id="reg-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
@@ -123,14 +90,10 @@ Register for Updates
                 </div>
             
                 </div>
-                <!-- <button class="w-100 btn btn-lg btn-primary" type="submit">Add Book</button> -->
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary w-100">Add</button>
+                    <button type="submit" class="btn btn-primary w-100">Add Book</button>
                 </div>
             </form>
-          <!-- <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis, exercitationem laboriosam nihil minus voluptatibus harum aliquam consequatur pariatur inventore dignissimos illum excepturi ratione ipsum sit iusto alias eligendi fugit laborum?</p>
-          <label for="modal-email" class="form-label">Your email address:</label>
-          <input type="text" class="form-control" id="modal-email" placeholder="e.g. mario@example.com"> -->
         </div>
       </div>
     </div>
