@@ -143,7 +143,10 @@ class MyDatabase:
                 f"VALUES ({cust_id}, {book_id}, '{datetime.date(datetime.now())}', '{return_date}');"
         self.execute_query(query=query)
         return "success loan"
-
+    def get_users_id(self):
+        query = f"SELECT id FROM {CUSTOMERS}"
+        res = self.get_data_db(query=query)
+        return res
     # when book_id is not on database it is available for loan
     def return_book(self, book_id):
         query = f"SELECT * FROM {LOANS} where book_id={book_id}"
@@ -163,12 +166,16 @@ class MyDatabase:
     def display_all_loans(self):
         return self.get_data_db(table=LOANS)
 
-    def display_all_late_loans(self):
-        late_loans = []
+    def display_late_loans(self):
+        late_loans = dict()
         res = self.get_data_db(table=LOANS)
         for loan in res:
-            if datetime.date(datetime.now()) > datetime.date(datetime.strptime(loan[3], '%Y-%m-%d')):
-                late_loans.append(loan)
+            late_loans[loan[0]] = list()
+        for loan in res:
+            if datetime.date(datetime.now()) + timedelta(days=5) > datetime.date(datetime.strptime(loan[3], '%Y-%m-%d')):
+                book_id = loan[1]   
+                book_name = self.find_book_by_id(book_id)
+                late_loans[loan[0]].append(book_name) 
         return late_loans
 
     def find_book_by_name(self, name):
@@ -190,11 +197,29 @@ class MyDatabase:
         self.execute_query(query=query)
         return "success delete"
 
+    def find_book_by_id(self, id):
+        # Find Book by Id
+        query = f"SELECT * FROM {BOOKS} WHERE id={id}"
+        book = self.get_data_db(query=query)
+        print(book)
+        book_name = book[0][1]
+        return book_name
+
     def remove_customer(self, id):
         # Delete Customer by Id
         query = f"DELETE FROM {CUSTOMERS} WHERE id={id}"
         self.execute_query(query=query)
+        # delete customer related loans
+        query = f"DELETE FROM {LOANS} WHERE cust_id={id}"
+        self.execute_query(query=query)
         return "success removed"
+    
+    def get_books_id_from_loans(self):
+        books_id = []
+        loans = self.get_data_db(table=LOANS)
+        for loan in loans:
+            books_id.append(loan[1])
+        return books_id
 
     # genreate 100 fake users and books
     def generate_fake_data(self):
@@ -206,6 +231,7 @@ class MyDatabase:
             age = randint(18, 60)
             # generate fake book
             book_name = fake.text(max_nb_chars=20)
+            book_name = book_name[:-1] #remove last char
             book_author = fake.name()
             book_year = randint(2000, 2020)
             book_type = randint(1, 3)
