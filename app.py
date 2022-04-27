@@ -1,6 +1,3 @@
-# ----------------------------------
-# Working with Database : SQLite
-# ----------------------------------
 from flask import Flask, redirect, render_template, request, url_for, session
 from my_modules import my_data_base
 from random import randint
