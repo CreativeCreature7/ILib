@@ -22,7 +22,7 @@
 
 <h1>index</h1>
 
-<img src="ILib-Local/static/ilib_index.png" alt="screenshot of index page" />
+<img src="https://i.ibb.co/TrLQ6D5/ilib-index.png" alt="screenshot of index page" />
 
 <p>
   Log-in info at the top of the readme. <br />
@@ -33,7 +33,7 @@
 <h1>Books & Loans</h1>
 
 <img
-  src="ILib-Local/static/ilib_booksloans.png"
+  src="https://i.ibb.co/jHXWsZY/ilib-booksloans.png"
   alt=" screenshot of booksloans page"
 />
 
@@ -53,7 +53,7 @@
 
 <h1>Customers</h1>
 
-<img src="ILib-Local/static/ilib_customers.png" alt=" screenshot of customers page" />
+<img src="https://i.ibb.co/LvxYvSn/ilib-customers.png" alt=" screenshot of customers page" />
 
 <p>each customer is a row in the table and has these properties:</p>
 
