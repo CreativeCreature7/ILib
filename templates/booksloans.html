@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
+
 {% block title %}Books{% endblock %}
+
 {% block search_nav %}
   <div class="col-lg-6">
    <form method="POST">
@@ -11,6 +13,7 @@
     </form>
 </div>
 {% endblock %}
+<!-- what message (Alert) to display -->
 {% block content %}
 {%if 'success' in message %}
 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -28,6 +31,7 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
  </div>
 {% endif %}
+<!-- list of books -->
 <div class="album py-5 bg-dark">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -64,6 +68,8 @@
             {% endfor %}
         </div>
     </div>
+<!-- end list of books -->
+
 <!-- get updates / modal trigger -->
 <div class="fixed-bottom">
     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#reg-modal">

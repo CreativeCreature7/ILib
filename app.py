@@ -6,8 +6,9 @@ from datetime import timedelta
 
 app = Flask(__name__)
 app.secret_key = 'my_secret'
-app.permanent_session_lifetime = timedelta(minutes=30)
+app.permanent_session_lifetime = timedelta(minutes=30) # loging-in is saved for 30 minutes
 
+#connect to db and create tables
 dbms = my_data_base.MyDatabase(my_data_base.SQLITE, db_name='mydb.sqlite')
 dbms.create_db_tables()
 
@@ -15,7 +16,7 @@ admin_name = 'admin'
 admin_password = 'admin'
 
 
-# Program entry point
+# route handles logins
 @app.route('/', methods=['GET', 'POST'])
 def login():
     app.current = 'home'
@@ -68,6 +69,7 @@ def books_loans():
         return render_template("booksloans.html", books=books, books_id=books_id, message=message)
     return redirect(url_for('login'))
 
+
 @app.route('/customers', methods=['GET', 'POST'])
 def customers():
     app.current = 'customers'
@@ -88,6 +90,7 @@ def customers():
         return render_template("customers.html", customers=res, message=message, late_loans=late_loans)
     return redirect(url_for('login'))
 
+# this route is for generating the fake data
 @app.route('/generate')
 def generate():
     dbms.generate_fake_data()

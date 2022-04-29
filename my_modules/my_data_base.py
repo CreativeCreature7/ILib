@@ -73,7 +73,7 @@ class MyDatabase:
             print(e)
 
 
-    # Insert, Update, Delete
+    
     def execute_query(self, query=''):
         if query == '' : return
 
@@ -83,7 +83,7 @@ class MyDatabase:
             except Exception as e:
                 print(e)
 
-    # Select
+    # gets table data or executes a query and returns a list of the sql result
     def get_data_db(self, table='', query=''):
         query = query if query != '' else f"SELECT * FROM '{table}';"
         res = []
@@ -98,23 +98,11 @@ class MyDatabase:
                 result.close()
         return res
 
-    # Examples
-
-
-
-    def delete_by_id(self, table, id):
-        # Delete Data by Id
-        
-        query = f"DELETE FROM {table} WHERE id={id}"
-        self.execute_query(table=table)
-        return "success delete"
-
 
     def add_book(self, name, author, year_published, book_type):
-        # Insert Data
         query = f"INSERT INTO {BOOKS}(name, author, year_published, type) " \
                 f"VALUES ('{name}', '{author}', {year_published}, {book_type});"
-        res = self.execute_query(query=query)
+        self.execute_query(query=query)
         return "success add"
 
 
@@ -143,10 +131,14 @@ class MyDatabase:
                 f"VALUES ({cust_id}, {book_id}, '{datetime.date(datetime.now())}', '{return_date}');"
         self.execute_query(query=query)
         return "success loan"
+
+
     def get_users_id(self):
         query = f"SELECT id FROM {CUSTOMERS}"
         res = self.get_data_db(query=query)
         return res
+
+
     # when book_id is not on database it is available for loan
     def return_book(self, book_id):
         query = f"SELECT * FROM {LOANS} where book_id={book_id}"
@@ -157,14 +149,6 @@ class MyDatabase:
             return "success returned"
         return 'failed to return'
 
-    def display_all_books(self):
-        return self.get_data_db(table=BOOKS)
-
-    def display_all_customers(self):
-        return self.get_data_db(table=CUSTOMERS)
-
-    def display_all_loans(self):
-        return self.get_data_db(table=LOANS)
 
     def display_late_loans(self):
         late_loans = dict()
@@ -197,13 +181,6 @@ class MyDatabase:
         self.execute_query(query=query)
         return "success delete"
 
-    def find_book_by_id(self, id):
-        # Find Book by Id
-        query = f"SELECT * FROM {BOOKS} WHERE id={id}"
-        book = self.get_data_db(query=query)
-        print(book)
-        book_name = book[0][1]
-        return book_name
 
     def remove_customer(self, id):
         # Delete Customer by Id
@@ -214,12 +191,14 @@ class MyDatabase:
         self.execute_query(query=query)
         return "success removed"
     
+
     def get_books_id_from_loans(self):
         books_id = []
         loans = self.get_data_db(table=LOANS)
         for loan in loans:
             books_id.append(loan[1])
         return books_id
+
 
     # genreate 100 fake users and books
     def generate_fake_data(self):

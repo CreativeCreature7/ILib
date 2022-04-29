@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block head %}
+
  <style>
     .btn-color{
         background-color: #0e1c36;
@@ -23,9 +24,13 @@
         text-decoration: none;
       }
  </style>
+ 
 {% endblock %}
+
 {% block title %}Home{% endblock %}
+
 {% block content %}
+<!-- what message (Alert) to display -->
 {%if 'logged' in message %}
 <div class="alert alert-success alert-dismissible fade show" role="alert">
     {{ message }}
@@ -37,6 +42,8 @@
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 {% endif %}
+
+<!-- login component -->
 <div class="container">
     <div class="row">
       <div class="col-md-6 offset-md-3">

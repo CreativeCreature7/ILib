@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
+
 {% block title %}customers{% endblock %}
+
 {% block search_nav %}
 <div class="col-lg-6">
   <form method="POST">
@@ -10,23 +12,10 @@
      </span>
    </form>
 </div>
-<!-- <div class="col-lg-6">
-<form method="POST">
-  <h1 class="h3 mb-3 fw-normal">Search Customer</h1>
-  <div class="form-floating">
-      <input type="text" class="form-control" id="customer_name" name="customer_name" placeholder="Jane Doe" required>
-      <label for="customer_name">Customer Name</label>
-  </div>
-  <button class="w-100 btn btn-lg btn-primary" type="submit">Search Customer</button>
-</form>
-</div> -->
 {% endblock %}
+
 {% block content %}
-<!-- {% if logged_string %}
-<div class="alert alert-info">
-  {{ logged_string }}
-</div>
-{% endif %} -->
+<!-- what message (Alert) to display -->
 {%if 'success' in message %}
 <div class="alert alert-success alert-dismissible fade show" role="alert">
     {{ message }}
@@ -39,25 +28,7 @@
 </div>
 {% endif %}
 
-<!-- <form method="POST">
-  <h1 class="h3 mb-3 fw-normal">Add Customer</h1>
-  <div class="form-floating">
-    <input type="text" class="form-control" id="name" name="name" placeholder="Eyal Gold" required>
-    <label for="name">Name</label>
-  </div>
-  <div class="form-floating">
-    <input type="text" class="form-control" id="city" name="city" placeholder="Tel-Aviv" required>
-    <label for="city">City</label>
-  </div>
-
-  <div class="form-floating">
-    <input type="number" class="form-control" id="age" name="age" placeholder="21" required>
-    <label for="age">Age</label>
-  </div>
-
-  </div>
-  <button class="w-100 btn btn-lg btn-primary" type="submit">Add Customer</button>
-</form> -->
+<!-- customers table -->
 <table class="table">
 <thead>
   <tr>
@@ -90,6 +61,7 @@
 {% endfor %}
 </tbody>
 </table>
+
 <!-- get updates / modal trigger -->
 <div class="fixed-bottom">
   <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#reg-modal">
@@ -125,8 +97,7 @@
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary w-100">Add Customer</button>
         </div>
-          
-              </div>
+      </div>
           </form>
       </div>
     </div>
